@@ -184,3 +184,5 @@ END;
 /
 
 
+GRANT EXEMPT ACCESS POLICY TO hoangan;
+

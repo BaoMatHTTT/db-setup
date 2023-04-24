@@ -158,7 +158,17 @@ END IF;
 RETURN TO_LBAC_DATA_LABEL('ACCESS_EMP_INFO',i_label);
 END;
 
+CREATE OR REPLACE FUNCTION gen_project_label
+RETURN LBACSYS.LBAC_LABEL
+AS
+i_label varchar2(80);
+BEGIN
+
+RETURN TO_LBAC_DATA_LABEL('ACCESS_EMP_INFO','C:PRJ:LDR,DEV');
+END;
+
 GRANT execute ON SEC_MGR.gen_personel_label TO lbacsys;
+GRANT execute ON SEC_MGR.gen_project_label TO lbacsys;
 
 
 BEGIN
@@ -171,3 +181,14 @@ SA_POLICY_ADMIN.APPLY_TABLE_POLICY (
     (:new.DIRECTOR_FLAG, :new.PERSONNEL_DEPART_FLAG, :new.PERSONNEL_DEPART_MANAGER_FLAG, :new.PROJECT_FLAG, :new.PROJECT_MANAGER_FLAG)',
     PREDICATE => NULL);
 END;
+
+BEGIN
+SA_POLICY_ADMIN.APPLY_TABLE_POLICY (
+    policy_name => 'ACCESS_EMP_INFO',
+    schema_name => 'SEC_MGR',
+    table_name => 'P_PROJECT',
+    table_options => 'NO_CONTROL',
+    label_function => 'sec_mgr.gen_project_label()',
+    PREDICATE => NULL);
+END;
+
